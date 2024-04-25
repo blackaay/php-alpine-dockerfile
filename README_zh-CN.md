@@ -13,7 +13,7 @@
 包含的php扩展：
 `swoole-5.1.1 bcmath calendar exif ftp gd gettext mongodb mysqli pcntl pdo_mysql redis shmop sockets sysvmsg sysvsem sysvshm xhprof xlswriter opcache zip xdebug`
 
-## php 8.3：
+## php 7.3：
 
 个人维护的镜像地址：`registry.cn-hangzhou.aliyuncs.com/blackaay/php7.3`
 
