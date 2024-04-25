@@ -10,3 +10,4 @@ RUN chmod +x /usr/local/bin/install-php-extensions && \
 RUN set -xe \
     && apk add --no-cache nginx supervisor\
     && mkdir -p /etc/supervisor/conf.d
+CMD ["sh", "-c", "while true; do sleep 1000; done"]
