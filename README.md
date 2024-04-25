@@ -13,7 +13,7 @@ Included packages:
 Included PHP extensions:
 `swoole-5.1.1 bcmath calendar exif ftp gd gettext mongodb mysqli pcntl pdo_mysql redis shmop sockets sysvmsg sysvsem sysvshm xhprof xlswriter opcache zip xdebug`
 
-## php 8.3：
+## php 7.3：
 
 Maintained image location:
 `registry.cn-hangzhou.aliyuncs.com/blackaay/php7.3`
