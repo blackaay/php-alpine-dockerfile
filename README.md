@@ -18,7 +18,7 @@ Maintained image location:
 `registry.cn-hangzhou.aliyuncs.com/blackaay/php80`
 
 Included packages:
-`php:8.0.26-fpm-alpine3.16 nginx supervisor`
+`php:8.0.26-fpm-alpine3.16 nginx supervisor composer `
 
 Included PHP extensions:
 `swoole-5.1.1 bcmath calendar exif ftp gd gettext mongodb mysqli pcntl pdo_mysql redis shmop sockets sysvmsg sysvsem sysvshm xhprof xlswriter opcache zip xdebug ssh2`
