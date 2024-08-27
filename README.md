@@ -30,7 +30,7 @@ Maintained image location:
 `registry.cn-hangzhou.aliyuncs.com/blackaay/php7.3`
 
 Included packages:
-`php:7.3.33-fpm-alpine3.14 nginx supervisor composer `
+`php:7.3.33-fpm-alpine3.14 nginx supervisor composer composer `
 
 Included PHP extensions:
 `swoole-4.8.12 bcmath calendar exif ftp gd gettext mongodb mysqli pcntl pdo_mysql redis shmop sockets sysvmsg sysvsem sysvshm xhprof xlswriter opcache zip xdebug`
