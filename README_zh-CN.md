@@ -8,10 +8,10 @@
 个人维护的镜像地址：`registry.cn-hangzhou.aliyuncs.com/blackaay/php8.3`
 
 包含的包：
-`8.3.2RC1-fpm-alpine3.19 nginx supervisor `
+`8.3.11RC2-fpm-alpine3.20 nginx supervisor `
 
 包含的php扩展：
-`swoole-5.1.1 bcmath calendar exif ftp gd gettext mongodb mysqli pcntl pdo_mysql redis shmop sockets sysvmsg sysvsem sysvshm xhprof xlswriter opcache zip xdebug`
+`swoole-5.1.1 bcmath calendar exif ftp gd gettext mongodb mysqli pcntl pdo_mysql redis shmop sockets sysvmsg sysvsem sysvshm xhprof xlswriter opcache zip xdebug event`
 
 ## php 8.0：
 
@@ -29,7 +29,7 @@
 个人维护的镜像地址：`registry.cn-hangzhou.aliyuncs.com/blackaay/php7.3`
 
 包含的包：
-`php:7.3.33-fpm-alpine3.14 nginx supervisor composer composer `
+`php:7.3.33-fpm-alpine3.14 nginx supervisor composer `
 
 包含的php扩展：
 `swoole-4.8.12 bcmath calendar exif ftp gd gettext mongodb mysqli pcntl pdo_mysql redis shmop sockets sysvmsg sysvsem sysvshm xhprof xlswriter opcache zip xdebug`
