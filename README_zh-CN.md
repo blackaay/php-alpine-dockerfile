@@ -23,6 +23,8 @@
 包含的php扩展：
 `swoole-5.1.1 bcmath calendar exif ftp gd gettext mongodb mysqli pcntl pdo_mysql redis shmop sockets sysvmsg sysvsem sysvshm xhprof xlswriter opcache zip xdebug ssh2`
 
+如果不需要 swoole 扩展，可以拉取 `registry.cn-hangzhou.aliyuncs.com/blackaay/php80:noSwoole` 镜像，这个镜像只移除了 swoole 扩展，使得镜像大小只有原来的一半（大约 190MB）
+
 
 ## php 7.3：
 
