@@ -8,10 +8,10 @@ Maintained image location:
 `registry.cn-hangzhou.aliyuncs.com/blackaay/php8.3`
 
 Included packages:
-`php:8.3.11RC2-fpm-alpine3.20 nginx supervisor`
+`php:8.3.12RC1-fpm-alpine3.20 nginx supervisor`
 
 Included PHP extensions:
-`swoole-5.1.1 bcmath calendar exif ftp gd gettext mongodb mysqli pcntl pdo_mysql redis shmop sockets sysvmsg sysvsem sysvshm xhprof xlswriter opcache zip xdebug event`
+`swoole-5.1.2 bcmath calendar exif ftp gd gettext mongodb mysqli pcntl pdo_mysql redis shmop sockets sysvmsg sysvsem sysvshm xhprof xlswriter opcache zip xdebug event`
 
 If you don't need the Swoole extension, you can pull `registry.cn-hangzhou.aliyuncs.com/blackaay/php8.3:noSwoole`. This image only removes the Swoole extension, reducing the image size to about half (approximately 215MB).
 
