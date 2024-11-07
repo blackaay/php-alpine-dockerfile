@@ -21,7 +21,7 @@ Included packages:
 `php:8.0.26-fpm-alpine3.16 nginx supervisor composer `
 
 Included PHP extensions:
-`swoole-5.1.1 bcmath calendar exif ftp gd gettext mongodb mysqli pcntl pdo_mysql redis shmop sockets sysvmsg sysvsem sysvshm xhprof xlswriter opcache zip xdebug ssh2`
+`swoole-5.1.1 bcmath calendar exif ftp gd gettext mongodb mysqli pcntl pdo_mysql redis shmop sockets sysvmsg sysvsem sysvshm xhprof xlswriter opcache zip xdebug ssh2 pdo_pgsql pgsql`
 
 If you don't need the Swoole extension, you can pull `registry.cn-hangzhou.aliyuncs.com/blackaay/php80:noSwoole`. This image only removes the Swoole extension, reducing the image size to about half (approximately 190MB).
 
