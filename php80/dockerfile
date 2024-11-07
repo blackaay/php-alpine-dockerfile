@@ -6,7 +6,7 @@ RUN apk add --no-cache openssl-dev build-base autoconf \
     && pecl install swoole-5.1.1 
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 RUN chmod +x /usr/local/bin/install-php-extensions && \
-   install-php-extensions bcmath calendar exif ftp gd gettext mongodb mysqli pcntl pdo_mysql redis shmop sockets sysvmsg sysvsem sysvshm xhprof xlswriter opcache zip xdebug ssh2 event && \
+   install-php-extensions bcmath calendar exif ftp gd gettext mongodb mysqli pcntl pdo_mysql redis shmop sockets sysvmsg sysvsem sysvshm xhprof xlswriter opcache zip xdebug ssh2 event pdo_pgsql pgsql && \
     cp -f /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
     echo 'extension=swoole.so' >> /usr/local/etc/php/php.ini
 COPY ./php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
