@@ -8,10 +8,10 @@ Maintained image location:
 `registry.cn-hangzhou.aliyuncs.com/blackaay/php8.3`
 
 Included packages:
-`php:8.3.11RC2-fpm-alpine3.20 nginx supervisor`
+`php:8.3.15-fpm-alpine3.21 nginx supervisor`
 
 Included PHP extensions:
-`swoole-5.1.1 bcmath calendar exif ftp gd gettext mongodb mysqli pcntl pdo_mysql redis shmop sockets sysvmsg sysvsem sysvshm xhprof xlswriter opcache zip xdebug event`
+`swoole-5.1.1 bcmath calendar exif ftp gd gettext mongodb mysqli pcntl pdo_mysql redis shmop sockets sysvmsg sysvsem sysvshm xhprof xlswriter opcache zip xdebug event simplexml`
 
 ## php8.0
 Maintained image location:
