@@ -13,3 +13,4 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN set -xe \
     && apk add --no-cache nginx supervisor\
     && mkdir -p /etc/supervisor/conf.d
+CMD ["sh", "-c", "tail -f /dev/null"]
