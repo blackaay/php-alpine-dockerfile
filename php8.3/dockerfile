@@ -10,7 +10,7 @@ RUN chmod +x /usr/local/bin/install-php-extensions && \
     && echo 'extension=swoole.so' >> /usr/local/etc/php/php.ini
 COPY ./php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
-    composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
+    composer config -g repo.packagist composer https://mirrors.tencent.com/composer/
 RUN set -xe \
     && apk add --no-cache nginx supervisor\
     && mkdir -p /etc/supervisor/conf.d

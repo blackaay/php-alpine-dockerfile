@@ -10,7 +10,7 @@ RUN chmod +x /usr/local/bin/install-php-extensions && \
     install-php-extensions bcmath calendar exif ftp gd gettext mongodb mysqli pcntl pdo_mysql redis shmop sockets sysvmsg sysvsem sysvshm xhprof xlswriter opcache zip xdebug
 COPY ./php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
-    composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
+    composer config -g repo.packagist composer https://mirrors.tencent.com/composer/
 RUN set -xe \
     && apk add --no-cache nginx supervisor\
     && mkdir -p /etc/supervisor/conf.d
