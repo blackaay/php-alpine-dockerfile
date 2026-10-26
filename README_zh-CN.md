@@ -15,6 +15,21 @@
 
 如果不需要 swoole 扩展，可以拉取 `registry.cn-hangzhou.aliyuncs.com/blackaay/php8.3:noSwoole` 镜像，这个镜像只移除了 swoole 扩展，使得镜像大小只有原来的一半（大约 215MB）
 
+## php 8.2：
+
+基础镜像：`php:8.2.35-fpm-alpine3.23`
+
+包含的包：
+`nginx supervisor composer`
+
+包含的 PHP 扩展（与 PHP 8.0 的 Dockerfile 保持一致）：
+`bcmath calendar exif ftp gd gettext mongodb mysqli pcntl pdo_mysql redis shmop sockets sysvmsg sysvsem sysvshm xhprof xlswriter opcache zip xdebug ssh2 event pdo_pgsql pgsql`
+
+在仓库根目录执行构建：
+```sh
+docker build -f php8.2/dockerfile -t php8.2:local php8.2
+```
+
 ## php 8.0：
 
 个人维护的镜像地址：`registry.cn-hangzhou.aliyuncs.com/blackaay/php80`

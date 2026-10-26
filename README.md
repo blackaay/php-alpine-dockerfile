@@ -13,6 +13,20 @@ Included packages:
 Included PHP extensions:
 `swoole-5.1.1 bcmath calendar exif ftp gd gettext mongodb mysqli pcntl pdo_mysql redis shmop sockets sysvmsg sysvsem sysvshm xhprof xlswriter opcache zip xdebug event simplexml`
 
+## php8.2
+Base image: `php:8.2.35-fpm-alpine3.23`
+
+Included packages:
+`nginx supervisor composer`
+
+Included PHP extensions (same as the PHP 8.0 Dockerfile):
+`bcmath calendar exif ftp gd gettext mongodb mysqli pcntl pdo_mysql redis shmop sockets sysvmsg sysvsem sysvshm xhprof xlswriter opcache zip xdebug ssh2 event pdo_pgsql pgsql`
+
+Build from the repository root:
+```sh
+docker build -f php8.2/dockerfile -t php8.2:local php8.2
+```
+
 ## php8.0
 Maintained image location:
 `registry.cn-hangzhou.aliyuncs.com/blackaay/php80`
