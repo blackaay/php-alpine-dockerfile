@@ -124,7 +124,6 @@ RUN if [ "$INSTALL_SWOOLE" = "true" ]; then \
 
 FROM alpine:${ALPINE_VERSION}
 
-LABEL maintainer="blackaay@foxmail.com"
 
 ENV PHP_INI_DIR=/usr/local/etc/php
 

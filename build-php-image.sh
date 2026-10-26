@@ -73,6 +73,40 @@ choose_option() {
     done
 }
 
+
+confirm_yes_no() {
+    local prompt="$1"
+    local default_answer="$2"
+    local answer
+
+    while true; do
+        if [[ "$default_answer" == true ]]; then
+            printf '\n%s [Y/n]: ' "$prompt"
+        else
+            printf '\n%s [y/N]: ' "$prompt"
+        fi
+        IFS= read -r answer || die "Failed to read selection; use command-line arguments for non-interactive builds"
+        if [[ -z "$answer" ]]; then
+            if [[ "$default_answer" == true ]]; then
+                answer="yes"
+            else
+                answer="no"
+            fi
+        fi
+        case "$answer" in
+            y|Y|yes|YES)
+                return 0
+                ;;
+            n|N|no|NO)
+                return 1
+                ;;
+            *)
+                printf 'Invalid answer. Enter y or n.\n'
+                ;;
+        esac
+    done
+}
+
 platform_request="host"
 image_tag=""
 no_cache=false
@@ -163,6 +197,16 @@ if [[ "$interactive" == true ]]; then
     version_request="${image_dirs[$selected_index]}"
     version_set=true
 
+    default_swoole_answer=false
+    if [[ "$swoole" == true ]]; then
+        default_swoole_answer=true
+    fi
+    if confirm_yes_no "Install Swoole extension?" "$default_swoole_answer"; then
+        swoole=true
+    else
+        swoole=false
+    fi
+
     platform_options=(
         "x86_64 Linux (linux/amd64)"
         "ARM64 Linux (linux/arm64)"
@@ -183,22 +227,6 @@ if [[ "$interactive" == true ]]; then
             platform_request="arm64"
             ;;
     esac
-
-    variant_options=(
-        "Standard (without Swoole)"
-        "With Swoole"
-    )
-    if [[ "$swoole" == true ]]; then
-        default_variant_index=2
-    else
-        default_variant_index=1
-    fi
-    choose_option "Select build variant:" "$default_variant_index" "${variant_options[@]}"
-    if [[ "$selected_index" -eq 1 ]]; then
-        swoole=true
-    else
-        swoole=false
-    fi
 fi
 
 requested="${version_request#php}"

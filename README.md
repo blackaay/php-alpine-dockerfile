@@ -7,7 +7,7 @@ English | [简体中文](README_zh-CN.md)
 
 The helper builds images locally only and does not push them to a registry.
 
-Run without arguments to select the PHP version, target platform, and build variant interactively:
+Run without arguments to select the PHP version, whether to include Swoole, and the target platform interactively:
 
 ```sh
 ./build-php-image.sh
