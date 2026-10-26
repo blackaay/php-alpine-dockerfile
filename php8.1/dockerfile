@@ -1,4 +1,6 @@
 FROM php:8.1.32-fpm-alpine3.21
+ARG INSTALL_SWOOLE=false
+ARG SWOOLE_VERSION=5.1.2
 LABEL maintainer="blackaay@foxmail.com"
 WORKDIR /www/code
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
@@ -6,6 +8,10 @@ ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/do
 RUN chmod +x /usr/local/bin/install-php-extensions && \
    install-php-extensions bcmath calendar exif ftp gd gettext mongodb mysqli pcntl pdo_mysql redis shmop sockets sysvmsg sysvsem sysvshm xhprof xlswriter opcache zip xdebug ssh2 event pdo_pgsql pgsql && \
     cp -f /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini
+RUN if [ "$INSTALL_SWOOLE" = "true" ]; then \
+        install-php-extensions "swoole@${SWOOLE_VERSION}" && \
+        php -m | grep -qx swoole; \
+    fi
 COPY ./php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \

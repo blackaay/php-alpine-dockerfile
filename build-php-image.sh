@@ -20,6 +20,7 @@ Options:
                             arm64  linux/arm64, for ARM64 Linux
                             Defaults to the detected host platform
   -t, --tag IMAGE           Custom image tag
+      --swoole              Install the Swoole extension
       --no-cache            Disable Docker build cache
   -h, --help                Show this help
 
@@ -29,6 +30,7 @@ Interactive example:
 Direct build examples:
   ./build-php-image.sh --platform amd64 8.2
   ./build-php-image.sh --platform arm64 8.2
+  ./build-php-image.sh --swoole 8.2
 
 Note:
   The built image is always loaded into Docker with --load.
@@ -74,6 +76,7 @@ choose_option() {
 platform_request="host"
 image_tag=""
 no_cache=false
+swoole=false
 version_request="$DEFAULT_VERSION"
 version_set=false
 interactive=false
@@ -97,6 +100,10 @@ while [[ $# -gt 0 ]]; do
             [[ $# -ge 2 ]] || die "$1 requires an image tag"
             image_tag="$2"
             shift 2
+            ;;
+        --swoole)
+            swoole=true
+            shift
             ;;
         --no-cache)
             no_cache=true
@@ -177,6 +184,21 @@ if [[ "$interactive" == true ]]; then
             ;;
     esac
 
+    variant_options=(
+        "Standard (without Swoole)"
+        "With Swoole"
+    )
+    if [[ "$swoole" == true ]]; then
+        default_variant_index=2
+    else
+        default_variant_index=1
+    fi
+    choose_option "Select build variant:" "$default_variant_index" "${variant_options[@]}"
+    if [[ "$selected_index" -eq 1 ]]; then
+        swoole=true
+    else
+        swoole=false
+    fi
 fi
 
 requested="${version_request#php}"
@@ -215,13 +237,18 @@ context_dir="$SCRIPT_DIR/$image_dir"
 
 if [[ -z "$image_tag" ]]; then
     platform_tag="${platform#linux/}"
-    image_tag="$image_dir:local-$platform_tag"
+    tag_suffix=""
+    if [[ "$swoole" == true ]]; then
+        tag_suffix="-swoole"
+    fi
+    image_tag="$image_dir:local-$platform_tag$tag_suffix"
 fi
 
 printf '\nBuild configuration:\n'
 printf '  PHP version:     %s\n' "$requested"
 printf '  Build context:   %s\n' "$context_dir"
 printf '  Target platform: %s\n' "$platform"
+printf '  Swoole:          %s\n' "$([[ "$swoole" == true ]] && echo yes || echo no)"
 printf '  Image tag:       %s\n' "$image_tag"
 
 if [[ "$interactive" == true ]]; then
@@ -243,6 +270,10 @@ build_args=(
     --file "$dockerfile"
     --tag "$image_tag"
 )
+
+if [[ "$swoole" == true ]]; then
+    build_args+=(--build-arg INSTALL_SWOOLE=true)
+fi
 
 if [[ "$no_cache" == true ]]; then
     build_args+=(--no-cache)

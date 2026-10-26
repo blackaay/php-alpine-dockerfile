@@ -2,6 +2,9 @@ ARG ALPINE_VERSION=3.16
 
 FROM alpine:${ALPINE_VERSION} AS php-builder
 
+ARG INSTALL_SWOOLE=false
+ARG SWOOLE_VERSION=4.8.12
+
 ARG PHP_SRC_REPOSITORY=https://github.com/php/php-src.git
 ARG PHP_SRC_BRANCH=PHP-7.4-CVE-2026-109618-109619
 # Pinned branch tip. Update this together with PHP_SRC_BRANCH when the security branch changes.
@@ -112,6 +115,12 @@ RUN set -eux; \
     for extension in bcmath calendar exif ftp gd gettext mongodb mysqli pcntl pdo_mysql redis shmop sockets sysvmsg sysvsem sysvshm xhprof xlswriter 'Zend OPcache' zip xdebug; do \
         php -m | grep -qx "${extension}"; \
     done
+
+RUN if [ "$INSTALL_SWOOLE" = "true" ]; then \
+        printf '\n' | pecl install -f "swoole-${SWOOLE_VERSION}" && \
+        printf '%s\n' 'extension=swoole.so' > /usr/local/etc/php/conf.d/docker-php-ext-swoole.ini && \
+        php -m | grep -qx swoole; \
+    fi
 
 FROM alpine:${ALPINE_VERSION}
 
