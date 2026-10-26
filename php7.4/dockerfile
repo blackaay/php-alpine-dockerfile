@@ -1,13 +1,170 @@
-FROM php:7.4.33-fpm-alpine3.16
+ARG ALPINE_VERSION=3.16
+
+FROM alpine:${ALPINE_VERSION} AS php-builder
+
+ARG PHP_SRC_REPOSITORY=https://github.com/php/php-src.git
+ARG PHP_SRC_BRANCH=PHP-7.4-CVE-2026-109618-109619
+# Pinned branch tip. Update this together with PHP_SRC_BRANCH when the security branch changes.
+ARG PHP_SRC_COMMIT=712e60f9edfd03f0960fc4fc3c2c375f42b90aa2
+ARG MONGODB_VERSION=1.20.1
+ARG REDIS_VERSION=6.0.2
+ARG XHPROF_VERSION=2.3.10
+ARG XLSWRITER_VERSION=1.5.8
+ARG XDEBUG_VERSION=3.1.6
+
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
+    && apk add --no-cache \
+        argon2-dev \
+        autoconf \
+        bison \
+        ca-certificates \
+        curl-dev \
+        freetype-dev \
+        g++ \
+        gcc \
+        gettext-dev \
+        git \
+        libjpeg-turbo-dev \
+        libpng-dev \
+        libsodium-dev \
+        libtool \
+        libwebp-dev \
+        libxml2-dev \
+        libxpm-dev \
+        libzip-dev \
+        linux-headers \
+        make \
+        musl-dev \
+        oniguruma-dev \
+        openssl-dev \
+        pkgconf \
+        re2c \
+        readline-dev \
+        sqlite-dev \
+        zlib-dev
+
+RUN set -eux; \
+    git clone --depth 1 --branch "${PHP_SRC_BRANCH}" --single-branch "${PHP_SRC_REPOSITORY}" /usr/src/php; \
+    cd /usr/src/php; \
+    test "$(git rev-parse HEAD)" = "${PHP_SRC_COMMIT}"; \
+    ./buildconf --force; \
+    ./configure \
+        --prefix=/usr/local \
+        --with-config-file-path=/usr/local/etc/php \
+        --with-config-file-scan-dir=/usr/local/etc/php/conf.d \
+        --enable-option-checking=fatal \
+        --with-pic \
+        --disable-cgi \
+        --disable-phpdbg \
+        --enable-fpm \
+        --with-fpm-user=www-data \
+        --with-fpm-group=www-data \
+        --enable-bcmath \
+        --enable-calendar \
+        --enable-exif \
+        --enable-ftp \
+        --enable-gd \
+        --with-freetype \
+        --with-jpeg \
+        --with-webp \
+        --with-xpm \
+        --with-gettext \
+        --enable-mbstring \
+        --enable-mysqlnd \
+        --with-mysqli=mysqlnd \
+        --with-pdo-mysql=mysqlnd \
+        --enable-pcntl \
+        --enable-shmop \
+        --enable-sockets \
+        --enable-sysvmsg \
+        --enable-sysvsem \
+        --enable-sysvshm \
+        --enable-opcache \
+        --with-zip \
+        --with-curl \
+        --with-iconv \
+        --with-openssl \
+        --with-password-argon2 \
+        --with-readline \
+        --with-sodium \
+        --with-zlib \
+        --with-pdo-sqlite=/usr \
+        --with-sqlite3=/usr \
+        --with-pear; \
+    make -j"$(grep -c '^processor' /proc/cpuinfo)"; \
+    make install; \
+    cp /usr/local/etc/php-fpm.conf.default /usr/local/etc/php-fpm.conf; \
+    cp /usr/local/etc/php-fpm.d/www.conf.default /usr/local/etc/php-fpm.d/www.conf; \
+    mkdir -p /usr/local/etc/php/conf.d; \
+    printf '%s\n' 'zend_extension=opcache.so' > /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini; \
+    export MAKEFLAGS="-j$(grep -c '^processor' /proc/cpuinfo)"; \
+    printf '\n' | pecl install -f "mongodb-${MONGODB_VERSION}"; \
+    printf '\n' | pecl install -f "redis-${REDIS_VERSION}"; \
+    printf '\n' | pecl install -f "xhprof-${XHPROF_VERSION}"; \
+    printf '\n' | pecl install -f "xlswriter-${XLSWRITER_VERSION}"; \
+    printf '\n' | pecl install -f "xdebug-${XDEBUG_VERSION}"; \
+    printf '%s\n' 'extension=mongodb.so' > /usr/local/etc/php/conf.d/docker-php-ext-mongodb.ini; \
+    printf '%s\n' 'extension=redis.so' > /usr/local/etc/php/conf.d/docker-php-ext-redis.ini; \
+    printf '%s\n' 'extension=xhprof.so' > /usr/local/etc/php/conf.d/docker-php-ext-xhprof.ini; \
+    printf '%s\n' 'extension=xlswriter.so' > /usr/local/etc/php/conf.d/docker-php-ext-xlswriter.ini; \
+    printf '%s\n' 'zend_extension=xdebug.so' > /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini; \
+    php -v; \
+    for extension in bcmath calendar exif ftp gd gettext mongodb mysqli pcntl pdo_mysql redis shmop sockets sysvmsg sysvsem sysvshm xhprof xlswriter 'Zend OPcache' zip xdebug; do \
+        php -m | grep -qx "${extension}"; \
+    done
+
+FROM alpine:${ALPINE_VERSION}
+
 LABEL maintainer="blackaay@foxmail.com"
-WORKDIR /www/code
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
-ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
-RUN chmod +x /usr/local/bin/install-php-extensions && \
-    install-php-extensions bcmath calendar exif ftp gd gettext mongodb mysqli pcntl pdo_mysql redis shmop sockets sysvmsg sysvsem sysvshm xhprof xlswriter opcache zip xdebug
+
+ENV PHP_INI_DIR=/usr/local/etc/php
+
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
+    && apk add --no-cache \
+        argon2 \
+        argon2-libs \
+        ca-certificates \
+        curl \
+        freetype \
+        libcurl \
+        libintl \
+        libjpeg-turbo \
+        libpng \
+        libsodium \
+        libstdc++ \
+        libwebp \
+        libxml2 \
+        libxpm \
+        libzip \
+        nginx \
+        oniguruma \
+        readline \
+        sqlite-libs \
+        supervisor \
+        zlib \
+    && (grep -q '^www-data:' /etc/group || addgroup -g 82 -S www-data) \
+    && (grep -q '^www-data:' /etc/passwd || adduser -u 82 -D -S -G www-data www-data) \
+    && mkdir -p /etc/supervisor/conf.d /www/code
+
+COPY --from=php-builder /usr/local /usr/local
 COPY ./php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
-    composer config -g repo.packagist composer https://mirrors.tencent.com/composer/
-RUN set -xe \
-    && apk add --no-cache nginx supervisor\
-    && mkdir -p /etc/supervisor/conf.d
+
+RUN printf '%s\n' \
+        '#!/bin/sh' \
+        'set -e' \
+        'if [ "${1#-}" != "$1" ]; then' \
+        '    set -- php-fpm "$@"' \
+        'fi' \
+        'exec "$@"' \
+        > /usr/local/bin/docker-php-entrypoint \
+    && chmod +x /usr/local/bin/docker-php-entrypoint \
+    && curl -fsSL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    && composer config -g repo.packagist composer https://mirrors.tencent.com/composer/ \
+    && php-fpm -t
+
+WORKDIR /www/code
+
+EXPOSE 9000
+STOPSIGNAL SIGQUIT
+ENTRYPOINT ["docker-php-entrypoint"]
+CMD ["php-fpm"]
